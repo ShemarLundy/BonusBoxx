@@ -5,6 +5,7 @@ import com.ShemarLundy.BonusBoxx.Model.Employee;
 import com.ShemarLundy.BonusBoxx.Model.StoreAdmin;
 import com.ShemarLundy.BonusBoxx.Model.User;
 import com.ShemarLundy.BonusBoxx.Repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void userHelper(User user) {
         String type = user.getUser_type();
+        user.setPassword(hashPassword(user.getPassword()));
 
         if (type.equals("EMPLOYEE")){
             Employee employee = user.getEmployee();
@@ -103,5 +105,10 @@ public class UserServiceImpl implements UserService{
 
             userRepository.save(newUser);
         }
+    }
+
+    public String hashPassword(String password){
+        String hashedPassword = BCrypt.hashpw(password,BCrypt.gensalt());
+        return hashedPassword;
     }
 }
