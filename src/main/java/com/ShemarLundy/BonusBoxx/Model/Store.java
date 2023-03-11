@@ -14,6 +14,8 @@ public class Store {
     private Boolean is_online;
     @OneToMany(mappedBy = "store")
     private List<Employee> employees;
+    @OneToMany(mappedBy = "store")
+    private List<Customer> customers;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_admin_id")
     private StoreAdmin storeAdmin;
@@ -97,5 +99,13 @@ public class Store {
 
     public void setTransaction(List<Transaction> transaction) {
         this.transaction = transaction;
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 }

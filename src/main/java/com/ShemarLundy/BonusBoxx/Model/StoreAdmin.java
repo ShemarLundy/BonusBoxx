@@ -15,9 +15,6 @@ public class StoreAdmin {
     private User user;
     @OneToOne(mappedBy = "storeAdmin", cascade = CascadeType.ALL, orphanRemoval = true)
     private Store store;
-    @OneToMany(mappedBy = "storeAdmin")
-    private List<Notification> notifications;
-
     public Long getID() {
         return ID;
     }
@@ -40,13 +37,5 @@ public class StoreAdmin {
 
     public void setStore(Store store) {
         this.store = store;
-    }
-
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
     }
 }

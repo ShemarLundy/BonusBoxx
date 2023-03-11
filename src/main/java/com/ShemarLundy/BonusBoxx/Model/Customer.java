@@ -19,9 +19,10 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Reward> rewards;
     @OneToMany(mappedBy = "customer")
-    private List<Notification> notifications;
-    @OneToMany(mappedBy = "customer")
     private List<Transaction> transaction;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     public Customer() {
     }
@@ -58,19 +59,19 @@ public class Customer {
         this.rewards = rewards;
     }
 
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
-    }
-
     public List<Transaction> getTransaction() {
         return transaction;
     }
 
     public void setTransaction(List<Transaction> transaction) {
         this.transaction = transaction;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 }
