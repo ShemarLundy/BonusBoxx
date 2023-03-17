@@ -14,5 +14,9 @@ public interface UserService {
 
     public void updateUser(Long userID, User updatedUser);
 
+    void createEmployee(User employee, Long storeID);
+
+    void addStoreToCustomer(Long userID, Long storeID);
+
 
 }

@@ -10,7 +10,7 @@ public class Employee{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ID;
     private String branch;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)

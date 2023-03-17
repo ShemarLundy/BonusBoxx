@@ -17,13 +17,13 @@ public class NotificationController {
     @Autowired
     UserNotificationService userNotificationService;
 
-    @PostMapping("/create/{adminID}")
+    @PostMapping("/create/{adminID}/notification")
     public String createNotification(@RequestBody Notification notification, @PathVariable Long adminID){
         notificationService.createNotification(notification, adminID);
         return "Notification was successfully created";
     }
 
-    @DeleteMapping("/delete/{customerID}/{notificationID}")
+    @DeleteMapping("/delete/{customerID}/{notificationID}/notification")
     public String deleteNotification(@PathVariable Long customerID, @PathVariable Long notificationID){
         userNotificationService.deleteUserNotification(customerID, notificationID);
         return "notification was successfully deleted";
@@ -35,12 +35,12 @@ public class NotificationController {
         return "All selected notifications where deleted";
     }
 
-    @GetMapping("/inbox/{customerID}")
+    @GetMapping("/{customerID}/inbox")
     public List<Notification> getUserInbox(@PathVariable Long customerID){
         return userNotificationService.getInbox(customerID);
     }
 
-    @PostMapping("/read/{customerID}/{notificationID}")
+    @PostMapping("/mark-as-read/{customerID}/{notificationID}/notification")
     public String markAsRead(@PathVariable Long customerID, @PathVariable Long notificationID){
         userNotificationService.updateMessageReadStatus(customerID,notificationID);
         return "message was marked as read";

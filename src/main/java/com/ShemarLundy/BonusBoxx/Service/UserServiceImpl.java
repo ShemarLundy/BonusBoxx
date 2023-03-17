@@ -1,20 +1,22 @@
 package com.ShemarLundy.BonusBoxx.Service;
 
-import com.ShemarLundy.BonusBoxx.Model.Customer;
-import com.ShemarLundy.BonusBoxx.Model.Employee;
-import com.ShemarLundy.BonusBoxx.Model.StoreAdmin;
-import com.ShemarLundy.BonusBoxx.Model.User;
+import com.ShemarLundy.BonusBoxx.Model.*;
+import com.ShemarLundy.BonusBoxx.Repository.CustomerRepository;
 import com.ShemarLundy.BonusBoxx.Repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
     @Override
     public User createUser(User user) {
         return userRepository.save(user);
@@ -41,6 +43,26 @@ public class UserServiceImpl implements UserService{
             user.setStoreAdmin(storeAdmin);
             createUser(user);
         }
+    }
+
+    @Override
+    public void createEmployee(User user, Long storeID) {
+
+//        Employee employee = user.getEmployee();
+//        employee.setUser(user);
+//        user.setEmployee(employee);
+//        createUser(user);
+
+        Store store = new Store();
+        Employee employee = user.getEmployee();
+
+        store.setID(storeID);
+        employee.setUser(user);
+        employee.setStore(store);
+        user.setEmployee(employee);
+
+        user.setPassword(hashPassword(user.getPassword()));
+        createUser(user);
     }
 
     @Override
@@ -110,5 +132,40 @@ public class UserServiceImpl implements UserService{
     public String hashPassword(String password){
         String hashedPassword = BCrypt.hashpw(password,BCrypt.gensalt());
         return hashedPassword;
+    }
+
+    @Override
+    public void addStoreToCustomer(Long customerID, Long storeID) {
+        boolean newToStore = false;
+        Optional <Customer> customer = customerRepository.findById(customerID);
+        Store newStore = new Store();
+        newStore.setID(storeID);
+
+        if (customer.isPresent()){
+            Customer shopper = customer.get();
+            if (shopper.getStore().isEmpty()){
+                List <Store> stores = shopper.getStore();
+                stores.add(newStore);
+                shopper.setStore(stores);
+                customerRepository.save(shopper);
+            }else{
+                List<Store> storesShopped = shopper.getStore();
+                for (int index = 0; index < storesShopped.size(); index++) {
+                    if (storesShopped.get(index).getID().equals(storeID)){
+                        newToStore = false;
+                        break;
+                    }else {
+                        newToStore = true;
+                    }
+                }
+
+                if (newToStore){
+                    List <Store> stores = shopper.getStore();
+                    stores.add(newStore);
+                    shopper.setStore(stores);
+                    customerRepository.save(shopper);
+                }
+            }
+        }
     }
 }

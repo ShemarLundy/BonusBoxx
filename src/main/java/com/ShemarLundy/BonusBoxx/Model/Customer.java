@@ -20,9 +20,9 @@ public class Customer {
     private List<Reward> rewards;
     @OneToMany(mappedBy = "customer")
     private List<Transaction> transaction;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
-    private Store store;
+    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "store_id")
+    private List <Store> store;
 
     public Customer() {
     }
@@ -67,11 +67,11 @@ public class Customer {
         this.transaction = transaction;
     }
 
-    public Store getStore() {
+    public List<Store> getStore() {
         return store;
     }
 
-    public void setStore(Store store) {
+    public void setStore(List<Store> store) {
         this.store = store;
     }
 }

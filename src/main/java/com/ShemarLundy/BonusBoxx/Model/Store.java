@@ -12,9 +12,9 @@ public class Store {
     private String store_name;
     private String store_category;
     private Boolean is_online;
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.REMOVE)
     private List<Employee> employees;
-    @OneToMany(mappedBy = "store")
+    @ManyToMany(mappedBy = "store", cascade = CascadeType.ALL)
     private List<Customer> customers;
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_admin_id")
@@ -25,6 +25,22 @@ public class Store {
     private List<Coupon> coupons;
     @OneToMany(mappedBy = "store")
     private List<Transaction> transaction;
+
+    @PreRemove
+    public void removeCustomersFromStore() {
+        for (Customer customer : customers) {
+            customer.getStore().remove(this);
+        }
+        customers.clear();
+    }
+
+//    @PreRemove
+//    public void removeEmployeesFromStore() {
+//        for (Employee employee : employees) {
+//            employee.getStore().remove(this);
+//        }
+//        customers.clear();
+//    }
 
     public Store() {
     }
